@@ -122,31 +122,231 @@
         </div>
     </div>
     <script>
-    const SHOPS={urerem:'UREEM',saoyangyu:'SAOYANGYU'};
-    let currentAction=null;
-    let allData={urerem:{out:[],low:[]},saoyangyu:{out:[],low:[]}};
-    let statusData=JSON.parse(localStorage.getItem('skc_status_v3')||'{}');
-    const D={urerem:{out:[{s:'2280',p:'https://img.ltwebstatic.com/images3_spmp/2025/02/28/e4/1740708980b6faafbdff43cf6a35c11ca4f24865a3.jpg',c:'黑色',z:['1XL'],l:3.1},{s:'6805',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/05/23/17/174796647093b4961ca1cdcd168c1cf04defa91ba4.jpg',c:'玫红色',z:['S'],l:2.3},{s:'6755',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/07/31/82/1753942269b292b3aef8a87215381b5be1b9aead21.jpg',c:'黑色',z:['M'],l:2.2},{s:'HS128',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/10/30/09/1761787592f0d203632c2610b7fe34db8fd23ecda9.jpg',c:'咖啡色',z:['M'],l:2.0},{s:'7201',p:'https://img.ltwebstatic.com/v4/j/spmp/2026/03/11/00/17732142103d6f79669264822acab7697722126944.jpg',c:'多色',z:['M'],l:2.0},{s:'6738',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/09/26/a5/17588748796489251ca6a25b29c2828e5486ea7830.jpg',c:'黑色',z:['M','XL'],l:1.9},{s:'6744',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/08/15/7f/1755253300fa26bc561a7fa8ac9a6df42fae4f2122.jpg',c:'宝蓝色',z:['XS','M'],l:1.6},{s:'7260',p:'https://img.ltwebstatic.com/v4/j/spmp/2026/04/06/84/1775464294dd31071d3f6dc49c99f5c394f4247463.jpg',c:'香槟色',z:['S'],l:1.0},{s:'6599',p:'https://img.ltwebstatic.com/images3_spmp/2025/03/13/85/1741844548bf0cebd9cae98d9732ea356eefec1f3e.jpg',c:'黑白色',z:['S'],l:0.6},{s:'7211',p:'https://img.ltwebstatic.com/v4/j/spmp/2026/03/23/98/1774244096a3833d4ffbc2725bdebabae0f30f1398.jpg',c:'多色',z:['XL'],l:0.4},{s:'6732',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/09/01/f6/175669783472ac7536d5bdc902691dd541b551f0bd.jpg',c:'玫红色',z:['M'],l:0.1}],low:[{s:'6738',p:'https://img.ltwebstatic.com/images3_spmp/2025/03/20/90/17424682868778eebc47d143030072407e59974810.jpg',c:'卡其色',z:['S','M','L'],d:1.0,u:11.3},{s:'6605',p:'https://img.ltwebstatic.com/images3_spmp/2025/02/26/4c/1740556595108f526144e2a4d240521a05b5710ac1.jpg',c:'多色',z:['L','XL'],d:0.3,u:6.1},{s:'6597-大码',p:'https://img.ltwebstatic.com/images3_spmp/2024/08/08/7f/1723083283994f0e4ece4505792e1c66f225d65c2c.jpg',c:'黑白色',z:['1XL'],d:0.2,u:4.7},{s:'6597',p:'http://img.ltwebstatic.com/images3_pi/2024/07/09/2f/172051523139abe3b94478999e1935bda96ba7fb33.jpg',c:'白色',z:['XL'],d:2.0,u:2.9},{s:'6805',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/07/22/9a/175315400322f61fb58ea110d3a86b8db08777dfd1.jpg',c:'卡其色',z:['S','L'],d:3.4,u:2.6},{s:'6805',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/05/23/17/174796647093b4961ca1cdcd168c1cf04defa91ba4.jpg',c:'玫红色',z:['M'],d:0.3,u:2.6},{s:'6755',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/07/31/82/1753942269b292b3aef8a87215381b5be1b9aead21.jpg',c:'黑色',z:['S'],d:0.3,u:2.6},{s:'W05301',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/04/07/c6/1744012371deadc89dffd73cc7aec45ec787b91efe.jpg',c:'白色',z:['0XL','1XL'],d:1.2,u:2.3},{s:'6805',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/07/30/c0/175383864514e7fb8dc94c593f0641140b948c95b6.jpg',c:'蓝色',z:['M'],d:0.6,u:2.3},{s:'6786',p:'https://img.ltwebstatic.com/v4/j/spmp/2026/04/08/70/177561948763cbeafe6eaefb9d2e0daf4a94fdc5dd_square.jpg',c:'淡蓝色',z:['M'],d:2.4,u:2.2}]},saoyangyu:{out:[{s:'6924',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/08/26/b1/175620076417d9723a3f54ac79933fe53536a81e0a.jpg',c:'黑色',z:['L'],l:4.0},{s:'6973',p:'https://img.ltwebstatic.com/v4/j/spmp/2026/01/17/25/176861555073007f34108eacb9b8a96722a8befd5b.jpg',c:'紫色',z:['XS'],l:0.0}],low:[{s:'6924',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/08/26/b1/175620076417d9723a3f54ac79933fe53536a81e0a.jpg',c:'黑色',z:['S','M'],d:0.2,u:12.2},{s:'6924',p:'https://img.ltwebstatic.com/v4/j/spmp/2026/03/31/71/1774951565136ee53c5ec0c90e89a93e1da0914925.jpg',c:'黑色',z:['Petite XS','Petite S'],d:0.5,u:6.7},{s:'6973-矮款',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/11/05/df/176231165384792c82fdb70b74af915a0a7b328b15.jpg',c:'蓝色',z:['Petite S','Petite L'],d:4.2,u:1.8},{s:'6973',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/10/30/21/1761795799b727172e315b50dfec8583b13a0f0937.jpg',c:'酒红色',z:['L'],d:3.9,u:1.7},{s:'6873',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/09/27/88/175894156090aaea815df29d823877ef66be14785d.jpg',c:'黑色',z:['L'],d:2.7,u:0.8},{s:'6924',p:'https://img.ltwebstatic.com/v4/j/spmp/2025/12/05/c9/176490246194cd1a8198e1675e57eab1fda16bbda1.jpg',c:'咖啡棕',z:['L'],d:3.2,u:0.5}]}};
-    D.urerem.out=D.urerem.out.map(i=>({...i,shop:'urerem',type:'out'}));
-    D.urerem.low=D.urerem.low.map(i=>({...i,shop:'urerem',type:'low'}));
-    D.saoyangyu.out=D.saoyangyu.out.map(i=>({...i,shop:'saoyangyu',type:'out'}));
-    D.saoyangyu.low=D.saoyangyu.low.map(i=>({...i,shop:'saoyangyu',type:'low'}));
-    let currentShop='all',currentStatus='all';
-    function gs(k){return statusData[k]||{p:null,w:null}}
-    function ss(){localStorage.setItem('skc_status_v3',JSON.stringify(statusData))}
-    function us(k,t,n,o){if(!statusData[k])statusData[k]={p:null,w:null};const d=new Date(),s=`${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;if(t==='p')statusData[k].p={n,o,t};else statusData[k].w={n,o,t};ss()}
-    function rh(){const d=new Date();document.getElementById('datetime').textContent=`${d.getFullYear()}/${d.getMonth()+1}/${d.getDate()} ${d.getHours()}:${String(d.getMinutes()).padStart(2,'0')}`;const to=D.urerem.out.length+D.saoyangyu.out.length,tl=D.urerem.low.length+D.saoyangyu.low.length,ts=259;document.getElementById('subtitle').textContent=`断货率:${(to/ts*100).toFixed(1)}% | 预警率:${(tl/ts*100).toFixed(1)}%`}
-    function ra(){let po=0,pl=0,pr=0,pc=0,pdO=0,pdL=0,prO=0,prL=0,pcO=0,pcL=0;['urerem','saoyangyu'].forEach(sh=>{[...D[sh].out,...D[sh].low].forEach(i=>{const s=gs(i.s);if(s.w){pc++;i.type==='out'?pcO++:pcL++;}else if(s.p){pr++;i.type==='out'?prO++:prL++;}else{po++;i.type==='out'?pdO++:pdL++;}})});document.getElementById('stats').innerHTML=`<div class="stat-card"><div class="num">${pdO}</div><div class="label">断货待处理</div></div><div class="stat-card"><div class="num">${pdL}</div><div class="label">预警待处理</div></div><div class="stat-card"><div class="num">${prO+prL}</div><div class="label">生产中</div></div><div class="stat-card"><div class="num">${pcO+pcL}</div><div class="label">已完成</div></div>`;const to=D.urerem.out.length+D.saoyangyu.out.length,tl=D.urerem.low.length+D.saoyangyu.low.length,t=to+tl;document.getElementById('rate-out').textContent=t>0?`断货率:${(to/t*100).toFixed(0)}%`:'';document.getElementById('rate-low').textContent=t>0?`预警率:${(tl/t*100).toFixed(0)}%`:''}
-    function gi(t){let i=currentShop==='all'?[...D.urerem[t],...D.saoyangyu[t]]:D[currentShop][t];if(currentStatus!=='all'){i=i.filter(x=>{const s=gs(x.s);if(currentStatus==='complete')return s.w;if(currentStatus==='production')return s.p&&!s.w;return!s.p&&!s.w})};return i}
-    function rc(t){const i=gi(t);document.getElementById(`count-${t}`).textContent=`${i.length}款`;document.getElementById(`cards-${t}`).innerHTML=i.length?i.map(x=>rc(x)).join(''):'<div class="empty-state">暂无数据</div>'}
-    function rc(i){const s=gs(i.s),ip=s.p!==null,ic=s.w!==null;let c=i.type==='out'?'out':'low';if(ip&&!ic)c='production';if(ic)c='complete';const v=i.type==='out'?i.l.toFixed(1):(i.u||0).toFixed(1);const img=i.p?`<img class="card-img" src="${i.p}" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">`:'';const ph=`<div class="card-img-placeholder" style="${i.p?'display:none':''}">无图</div>`;let pt=ip&&!ic?'✓':'🏭',wt='📦';if(ic){pt='✓';wt='✓';}let lg='';if(s.p)lg+=`<div>🏭 ${s.p.n||'已确认'}</div>`;if(s.w)lg+=`<div>📦 ${s.w.n||'已确认'}</div>`;return`<div class="card ${c}">${ic?'':`<span class="${i.type==='out'?'card-loss':'card-urgency'}">${v}</span>`}${img}${ph}<div class="card-code">[${SHOPS[i.shop]}] ${i.s}</div><div class="card-color">${i.c}</div><div class="card-sizes"><div class="card-sizes-label">${i.type==='out'?'断':'预'}码</div><div class="card-sizes-value">${i.z.join(',')}</div></div>${i.d?`<div style="color:#fa8c16;font-size:8px">⏰${i.d}天</div>`:''}<div class="card-actions"><button class="action-btn ${ip&&!ic?'production done':'production'}" onclick="om('${i.s}','p')" ${ic?'disabled':''}>${pt}生产</button><button class="action-btn ${ic?'warehouse done':'warehouse'}" onclick="om('${i.s}','w')" ${!ip||ic?'disabled':''}>${wt}仓库</button></div>${lg?`<div class="card-log">${lg}</div>`:''}</div>`}
-    function om(k,t){currentAction={k,t};document.getElementById('modalTitle').textContent=t==='p'?'确认生产完成':'确认仓库完成';document.getElementById('confirmName').value='';document.getElementById('confirmNote').value='';document.getElementById('confirmModal').classList.add('show');document.getElementById('confirmName').focus()}
-    function cm(){document.getElementById('confirmModal').classList.remove('show');currentAction=null}
-    function ca(){const n=document.getElementById('confirmName').value.trim(),o=document.getElementById('confirmNote').value.trim();us(currentAction.k,currentAction.t,n,o);cm();ra();rc('out');rc('low')}
-    document.querySelectorAll('.shop-btn').forEach(b=>{b.onclick=()=>{document.querySelectorAll('.shop-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentShop=b.dataset.shop;ra();rc('out');rc('low')}});
-    document.querySelectorAll('.status-btn').forEach(b=>{b.onclick=()=>{document.querySelectorAll('.status-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentStatus=b.dataset.status;rc('out');rc('low')}});
-    document.addEventListener('keydown',e=>{if(e.key==='Escape')cm()});
-    allData=D;rh();ra();rc('out');rc('low');
+        var SHOPS = {urerem: 'UREEM', saoyangyu: 'SAOYANGYU'};
+        var currentAction = null;
+        var allData = {urerem: {out: [], low: []}, saoyangyu: {out: [], low: []}};
+        var statusData = JSON.parse(localStorage.getItem('skc_status_v4') || '{}');
+        
+        // 数据
+        allData = {
+            urerem: {
+                out: [
+                    {supplierCode: '2280', skc: 'sz2412255927925202', picUrl: 'https://img.ltwebstatic.com/images3_spmp/2025/02/28/e4/1740708980b6faafbdff43cf6a35c11ca4f24865a3.jpg', color: '黑色', sizes: ['1XL'], lossSales: 3.1},
+                    {supplierCode: '6805', skc: 'sz25040722918448288', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/05/23/17/174796647093b4961ca1cdcd168c1cf04defa91ba4.jpg', color: '玫红色', sizes: ['S'], lossSales: 2.3},
+                    {supplierCode: '6755', skc: 'sz25041429577663809', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/07/31/82/1753942269b292b3aef8a87215381b5be1b9aead21.jpg', color: '黑色', sizes: ['M'], lossSales: 2.2},
+                    {supplierCode: 'HS128', skc: 'sz25062821107108034', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/10/30/09/1761787592f0d203632c2610b7fe34db8fd23ecda9.jpg', color: '咖啡色', sizes: ['M'], lossSales: 2.0},
+                    {supplierCode: '7201', skc: 'sz251111557223513110', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2026/03/11/00/17732142103d6f79669264822acab7697722126944.jpg', color: '多色', sizes: ['M'], lossSales: 2.0},
+                    {supplierCode: '6738', skc: 'sz25021596171318722', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/09/26/a5/17588748796489251ca6a25b29c2828e5486ea7830.jpg', color: '黑色', sizes: ['M','XL'], lossSales: 1.9},
+                    {supplierCode: '6744', skc: 'sz25021847847763883', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/08/15/7f/1755253300fa26bc561a7fa8ac9a6df42fae4f2122.jpg', color: '宝蓝色', sizes: ['XS','M'], lossSales: 1.6},
+                    {supplierCode: '7260', skc: 'sz260114174598584398774', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2026/04/06/84/1775464294dd31071d3f6dc49c99f5c394f4247463.jpg', color: '香槟色', sizes: ['S'], lossSales: 1.0},
+                    {supplierCode: '6599', skc: 'sz2406289344397129', picUrl: 'https://img.ltwebstatic.com/images3_spmp/2025/03/13/85/1741844548bf0cebd9cae98d9732ea356eefec1f3e.jpg', color: '黑白色', sizes: ['S'], lossSales: 0.6},
+                    {supplierCode: '7211', skc: 'sz251205688414315796', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2026/03/23/98/1774244096a3833d4ffbc2725bdebabae0f30f1398.jpg', color: '多色', sizes: ['XL'], lossSales: 0.4},
+                    {supplierCode: '6732', skc: 'sz2501105338598183', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/09/01/f6/175669783472ac7536d5bdc902691dd541b551f0bd.jpg', color: '玫红色', sizes: ['M'], lossSales: 0.1}
+                ].map(function(i){return $.extend({shop:'urerem',type:'out'},i);}),
+                low: [
+                    {supplierCode: '6738', skc: 'sz25021596171328006', picUrl: 'https://img.ltwebstatic.com/images3_spmp/2025/03/20/90/17424682868778eebc47d143030072407e59974810.jpg', color: '卡其色', sizes: ['S','M','L'], minStockDays: 1.0, urgency: 11.3},
+                    {supplierCode: '6605', skc: 'sz2406283173202962', picUrl: 'https://img.ltwebstatic.com/images3_spmp/2025/02/26/4c/1740556595108f526144e2a4d240521a05b5710ac1.jpg', color: '多色', sizes: ['L','XL'], minStockDays: 0.3, urgency: 6.1},
+                    {supplierCode: '6597-大码', skc: 'sz2408084286487871', picUrl: 'https://img.ltwebstatic.com/images3_spmp/2024/08/08/7f/1723083283994f0e4ece4505792e1c66f225d65c2c.jpg', color: '黑白色', sizes: ['1XL'], minStockDays: 0.2, urgency: 4.7},
+                    {supplierCode: '6597', skc: 'sz2406280900144465', picUrl: 'http://img.ltwebstatic.com/images3_pi/2024/07/09/2f/172051523139abe3b94478999e1935bda96ba7fb33.jpg', color: '白色', sizes: ['XL'], minStockDays: 2.0, urgency: 2.9},
+                    {supplierCode: '6805', skc: 'sz25040722918442117', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/07/22/9a/175315400322f61fb58ea110d3a86b8db08777dfd1.jpg', color: '卡其色', sizes: ['S','L'], minStockDays: 3.4, urgency: 2.6},
+                    {supplierCode: '6805', skc: 'sz25040722918448288', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/05/23/17/174796647093b4961ca1cdcd168c1cf04defa91ba4.jpg', color: '玫红色', sizes: ['M'], minStockDays: 0.3, urgency: 2.6},
+                    {supplierCode: '6755', skc: 'sz25041429577663809', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/07/31/82/1753942269b292b3aef8a87215381b5be1b9aead21.jpg', color: '黑色', sizes: ['S'], minStockDays: 0.3, urgency: 2.6},
+                    {supplierCode: 'W05301', skc: 'sz25040722873221113', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/04/07/c6/1744012371deadc89dffd73cc7aec45ec787b91efe.jpg', color: '白色', sizes: ['0XL','1XL'], minStockDays: 1.2, urgency: 2.3},
+                    {supplierCode: '6805', skc: 'sz25040722918488296', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/07/30/c0/175383864514e7fb8dc94c593f0641140b948c95b6.jpg', color: '蓝色', sizes: ['M'], minStockDays: 0.6, urgency: 2.3},
+                    {supplierCode: '6786', skc: 'sz25032197746312768', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2026/04/08/70/177561948763cbeafe6eaefb9d2e0daf4a94fdc5dd_square.jpg', color: '淡蓝色', sizes: ['M'], minStockDays: 2.4, urgency: 2.2}
+                ].map(function(i){return $.extend({shop:'urerem',type:'low'},i);})
+            },
+            saoyangyu: {
+                out: [
+                    {supplierCode: '6924', skc: 'sz25072999002436009', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/08/26/b1/175620076417d9723a3f54ac79933fe53536a81e0a.jpg', color: '黑色', sizes: ['L'], lossSales: 4.0},
+                    {supplierCode: '6973', skc: 'sz25070853351973574', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2026/01/17/25/176861555073007f34108eacb9b8a96722a8befd5b.jpg', color: '紫色', sizes: ['XS'], lossSales: 0.0}
+                ].map(function(i){return $.extend({shop:'saoyangyu',type:'out'},i);}),
+                low: [
+                    {supplierCode: '6924', skc: 'sz25072999002436009', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/08/26/b1/175620076417d9723a3f54ac79933fe53536a81e0a.jpg', color: '黑色', sizes: ['S','M'], minStockDays: 0.2, urgency: 12.2},
+                    {supplierCode: '6924', skc: 'sz260105153950770355156', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2026/03/31/71/1774951565136ee53c5ec0c90e89a93e1da0914925.jpg', color: '黑色', sizes: ['Petite XS','Petite S'], minStockDays: 0.5, urgency: 6.7},
+                    {supplierCode: '6973-矮款', skc: 'sz251105543146124711', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/11/05/df/176231165384792c82fdb70b74af915a0a7b328b15.jpg', color: '蓝色', sizes: ['Petite S','Petite L'], minStockDays: 4.2, urgency: 1.8},
+                    {supplierCode: '6973', skc: 'sz25070853351948668', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/10/30/21/1761795799b727172e315b50dfec8583b13a0f0937.jpg', color: '酒红色', sizes: ['L'], minStockDays: 3.9, urgency: 1.7},
+                    {supplierCode: '6873', skc: 'sz25052724238238898', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/09/27/88/175894156090aaea815df29d823877ef66be14785d.jpg', color: '黑色', sizes: ['L'], minStockDays: 2.7, urgency: 0.8},
+                    {supplierCode: '6924', skc: 'sz25072999002490044', picUrl: 'https://img.ltwebstatic.com/v4/j/spmp/2025/12/05/c9/176490246194cd1a8198e1675e57eab1fda16bbda1.jpg', color: '咖啡棕', sizes: ['L'], minStockDays: 3.2, urgency: 0.5}
+                ].map(function(i){return $.extend({shop:'saoyangyu',type:'low'},i);})
+            }
+        };
+        
+        var currentShop = 'all';
+        var currentStatus = 'all';
+        
+        function getStatus(skc) {
+            return statusData[skc] || {production: null, warehouse: null};
+        }
+        
+        function saveStatus() {
+            localStorage.setItem('skc_status_v4', JSON.stringify(statusData));
+        }
+        
+        function updateStatus(skc, type, name, note) {
+            if (!statusData[skc]) statusData[skc] = {production: null, warehouse: null};
+            var now = new Date();
+            var timeStr = (now.getMonth()+1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+            if (type === 'production') {
+                statusData[skc].production = {name: name, note: note, time: timeStr};
+            } else {
+                statusData[skc].warehouse = {name: name, note: note, time: timeStr};
+            }
+            saveStatus();
+        }
+        
+        function renderHeader() {
+            var now = new Date();
+            document.getElementById('datetime').textContent = now.getFullYear() + '/' + (now.getMonth()+1) + '/' + now.getDate() + ' ' + now.getHours() + ':' + String(now.getMinutes()).padStart(2,'0');
+            var totalOut = allData.urerem.out.length + allData.saoyangyu.out.length;
+            var totalLow = allData.urerem.low.length + allData.saoyangyu.low.length;
+            var totalSku = 200 + 59;
+            document.getElementById('subtitle').textContent = '断货率:' + (totalOut/totalSku*100).toFixed(1) + '% | 预警率:' + (totalLow/totalSku*100).toFixed(1) + '%';
+        }
+        
+        function renderStats() {
+            var pendingOut = 0, pendingLow = 0, prodOut = 0, prodLow = 0, compOut = 0, compLow = 0;
+            ['urerem','saoyangyu'].forEach(function(shop) {
+                allData[shop].out.concat(allData[shop].low).forEach(function(item) {
+                    var s = getStatus(item.skc);
+                    if (s.warehouse) {
+                        item.type === 'out' ? compOut++ : compLow++;
+                    } else if (s.production) {
+                        item.type === 'out' ? prodOut++ : prodLow++;
+                    } else {
+                        item.type === 'out' ? pendingOut++ : pendingLow++;
+                    }
+                });
+            });
+            document.getElementById('stats').innerHTML = 
+                '<div class="stat-card"><div class="num">' + pendingOut + '</div><div class="label">断货待处理</div></div>' +
+                '<div class="stat-card"><div class="num">' + pendingLow + '</div><div class="label">预警待处理</div></div>' +
+                '<div class="stat-card"><div class="num">' + (prodOut+prodLow) + '</div><div class="label">生产中</div></div>' +
+                '<div class="stat-card"><div class="num">' + (compOut+compLow) + '</div><div class="label">已完成</div></div>';
+            
+            var totalOut = allData.urerem.out.length + allData.saoyangyu.out.length;
+            var totalLow = allData.urerem.low.length + allData.saoyangyu.low.length;
+            var total = totalOut + totalLow;
+            document.getElementById('rate-out').textContent = total > 0 ? '断货率:' + (totalOut/total*100).toFixed(0) + '%' : '';
+            document.getElementById('rate-low').textContent = total > 0 ? '预警率:' + (totalLow/total*100).toFixed(0) + '%' : '';
+        }
+        
+        function getFiltered(type) {
+            var items = currentShop === 'all' ? allData.urerem[type].concat(allData.saoyangyu[type]) : allData[currentShop][type];
+            if (currentStatus !== 'all') {
+                items = items.filter(function(item) {
+                    var s = getStatus(item.skc);
+                    if (currentStatus === 'complete') return s.warehouse;
+                    if (currentStatus === 'production') return s.production && !s.warehouse;
+                    return !s.production && !s.warehouse;
+                });
+            }
+            return items;
+        }
+        
+        function renderCards(type) {
+            var items = getFiltered(type);
+            document.getElementById('count-' + type).textContent = items.length + '款';
+            if (items.length === 0) {
+                document.getElementById('cards-' + type).innerHTML = '<div class="empty-state">暂无数据</div>';
+                return;
+            }
+            var html = '';
+            items.forEach(function(item) {
+                html += renderCard(item);
+            });
+            document.getElementById('cards-' + type).innerHTML = html;
+        }
+        
+        function renderCard(item) {
+            var s = getStatus(item.skc);
+            var isProduction = s.production !== null;
+            var isComplete = s.warehouse !== null;
+            var cardClass = item.type === 'out' ? 'out' : 'low';
+            if (isProduction && !isComplete) cardClass = 'production';
+            if (isComplete) cardClass = 'complete';
+            
+            var value = item.type === 'out' ? item.lossSales.toFixed(1) : (item.urgency || 0).toFixed(1);
+            var imgHtml = item.picUrl ? '<img class="card-img" src="' + item.picUrl + '" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">' : '';
+            var placeholder = '<div class="card-img-placeholder" style="' + (item.picUrl ? 'display:none' : '') + '">无图</div>';
+            
+            var pBtnClass = isProduction && !isComplete ? 'production done' : 'production';
+            var pBtnText = isProduction && !isComplete ? '✓' : '🏭';
+            var wBtnClass = isComplete ? 'warehouse done' : 'warehouse';
+            var wBtnText = isComplete ? '✓' : '📦';
+            
+            var logHtml = '';
+            if (s.production) logHtml += '<div>🏭 ' + (s.production.name || '已确认') + '</div>';
+            if (s.warehouse) logHtml += '<div>📦 ' + (s.warehouse.name || '已确认') + '</div>';
+            
+            return '<div class="card ' + cardClass + '">' +
+                (isComplete ? '' : '<span class="' + (item.type === 'out' ? 'card-loss' : 'card-urgency') + '">' + value + '</span>') +
+                imgHtml + placeholder +
+                '<div class="card-code">[' + SHOPS[item.shop] + '] ' + item.supplierCode + '</div>' +
+                '<div class="card-color">' + item.color + '</div>' +
+                '<div class="card-sizes"><div class="card-sizes-label">' + (item.type === 'out' ? '断' : '预') + '码</div><div class="card-sizes-value">' + item.sizes.join(',') + '</div></div>' +
+                (item.minStockDays ? '<div style="color:#fa8c16;font-size:8px">⏰' + item.minStockDays + '天</div>' : '') +
+                '<div class="card-actions">' +
+                '<button class="action-btn ' + pBtnClass + '" onclick="openModal(\'' + item.skc + '\',\'production\')" ' + (isComplete ? 'disabled' : '') + '>' + pBtnText + '生产</button>' +
+                '<button class="action-btn ' + wBtnClass + '" onclick="openModal(\'' + item.skc + '\',\'warehouse\')" ' + (!isProduction || isComplete ? 'disabled' : '') + '>' + wBtnText + '仓库</button>' +
+                '</div>' +
+                (logHtml ? '<div class="card-log">' + logHtml + '</div>' : '') +
+                '</div>';
+        }
+        
+        function openModal(skc, type) {
+            currentAction = {skc: skc, type: type};
+            document.getElementById('modalTitle').textContent = type === 'production' ? '确认生产完成' : '确认仓库完成';
+            document.getElementById('confirmName').value = '';
+            document.getElementById('confirmNote').value = '';
+            document.getElementById('confirmModal').classList.add('show');
+            document.getElementById('confirmName').focus();
+        }
+        
+        function closeModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+            currentAction = null;
+        }
+        
+        function confirmAction() {
+            var name = document.getElementById('confirmName').value.trim();
+            var note = document.getElementById('confirmNote').value.trim();
+            updateStatus(currentAction.skc, currentAction.type, name, note);
+            closeModal();
+            renderStats();
+            renderCards('out');
+            renderCards('low');
+        }
+        
+        document.querySelectorAll('.shop-btn').forEach(function(btn) {
+            btn.onclick = function() {
+                document.querySelectorAll('.shop-btn').forEach(function(b){b.classList.remove('active')});
+                btn.classList.add('active');
+                currentShop = btn.dataset.shop;
+                renderStats();
+                renderCards('out');
+                renderCards('low');
+            };
+        });
+        
+        document.querySelectorAll('.status-btn').forEach(function(btn) {
+            btn.onclick = function() {
+                document.querySelectorAll('.status-btn').forEach(function(b){b.classList.remove('active')});
+                btn.classList.add('active');
+                currentStatus = btn.dataset.status;
+                renderCards('out');
+                renderCards('low');
+            };
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeModal();
+        });
+        
+        renderHeader();
+        renderStats();
+        renderCards('out');
+        renderCards('low');
     </script>
 </body>
 </html>
