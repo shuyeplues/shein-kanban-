@@ -5,67 +5,67 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SHEIN OBM 断货预警交接 V1.1</title>
     <style>
-        *{margin:0;padding:0;box-sizing:border-box}
-        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;min-height:100vh}
-        .header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:15px 12px}
-        .header h1{font-size:16px;font-weight:600}
-        .header p{font-size:11px;margin-top:5px;opacity:0.9}
-        .stats{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-        .stat-card{background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:6px;text-align:center;min-width:60px}
-        .stat-card .num{font-size:18px;font-weight:bold}
-        .stat-card .label{font-size:9px;opacity:0.9}
-        .filters{background:white;padding:10px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #eee}
-        .filter-btn{padding:5px 10px;border:1px solid #ddd;background:white;border-radius:5px;cursor:pointer;font-size:11px}
-        .filter-btn:hover{border-color:#667eea;color:#667eea}
-        .filter-btn.active{background:#667eea;color:white;border-color:#667eea}
-        .container{padding:10px}
-        .section{background:white;border-radius:10px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-        .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-        .section-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
-        .section-title .dot{width:8px;height:8px;border-radius:50%}
-        .section-title .dot.red{background:#ff4d4f}
-        .section-title .dot.orange{background:#fa8c16}
-        .count-badge{background:#f5f5f5;padding:3px 8px;border-radius:10px;font-size:10px;color:#666}
-        .cards{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
-        .card{border:2px solid #eee;border-radius:8px;padding:8px;position:relative}
-        .card.out{border-color:#ff4d4f;background:linear-gradient(135deg,#fff1f0,white)}
-        .card.low{border-color:#fa8c16;background:linear-gradient(135deg,#fff7e6,white)}
-        .card.done{background:#e8f8e8;border-color:#52c41a}
-        .card.done::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.1);border-radius:6px;pointer-events:none}
-        .card-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;background:#f5f5f5}
-        .card-img-placeholder{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#f0f0f0;border-radius:6px;color:#999;font-size:10px}
-        .card-code{font-weight:600;font-size:11px;margin:6px 0 2px}
-        .card-color{font-size:10px;color:#666}
-        .card-sizes{margin-top:3px}
-        .card-sizes-label{font-size:8px;color:#999}
-        .card-sizes-value{font-size:10px;color:#333;font-weight:500}
-        .card-loss{background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;position:absolute;top:6px;right:6px}
-        .card-urgency{background:#fa8c16;color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;position:absolute;top:6px;right:6px}
-        .card-actions{margin-top:8px;display:flex;flex-direction:column;gap:4px}
-        .action-btn{padding:6px;border:none;border-radius:5px;cursor:pointer;font-size:10px;font-weight:500;width:100%}
-        .action-btn.pro{background:#e0e0e0;color:#666}
-        .action-btn.pro:hover:not(:disabled){background:#8c8c8c;color:white}
-        .action-btn.pro.done{background:#8c8c8c;color:white}
-        .action-btn.warehouse{background:#e0e0e0;color:#666}
-        .action-btn.warehouse:hover:not(:disabled){background:#52c41a;color:white}
-        .action-btn.warehouse.done{background:#52c41a;color:white}
-        .action-btn:disabled{opacity:0.5;cursor:not-allowed}
-        .card-log{margin-top:6px;padding-top:6px;border-top:1px dashed #ddd;font-size:9px;color:#999}
-        .empty-state{text-align:center;padding:30px;color:#999;font-size:12px}
-        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:15px}
-        .modal.show{display:flex}
-        .modal-content{background:white;border-radius:10px;padding:18px;width:100%;max-width:300px}
-        .modal-title{font-size:15px;font-weight:600;margin-bottom:12px;text-align:center}
-        .modal-input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:12px;margin-bottom:8px}
-        .modal-input:focus{outline:none;border-color:#667eea}
-        .modal-note{font-size:10px;color:#999;margin-top:-6px;margin-bottom:10px}
-        .modal-actions{display:flex;gap:8px}
-        .modal-btn{flex:1;padding:10px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500}
-        .modal-btn.cancel{background:#f0f0f0;color:#666}
-        .modal-btn.confirm{background:#667eea;color:white}
-        .footer{text-align:center;padding:15px;color:#999;font-size:10px}
-        @media(max-width:480px){ .cards{grid-template-columns:repeat(3,1fr);gap:6px} .card{padding:6px} .header h1{font-size:14px}}
-        @media(max-width:360px){ .cards{grid-template-columns:repeat(4,1fr);gap:4px} .card{padding:4px} .card-code{font-size:9px}}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;min-height:100vh}
+.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:15px 12px}
+.header h1{font-size:16px;font-weight:600}
+.header p{font-size:11px;margin-top:5px;opacity:0.9}
+.stats{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.stat-card{background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:6px;text-align:center;min-width:60px}
+.stat-card .num{font-size:18px;font-weight:bold}
+.stat-card .label{font-size:9px;opacity:0.9}
+.filters{background:white;padding:10px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #eee}
+.filter-btn{padding:5px 10px;border:1px solid #ddd;background:white;border-radius:5px;cursor:pointer;font-size:11px}
+.filter-btn:hover{border-color:#667eea;color:#667eea}
+.filter-btn.active{background:#667eea;color:white;border-color:#667eea}
+.container{padding:10px}
+.section{background:white;border-radius:10px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.section-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+.section-title .dot{width:8px;height:8px;border-radius:50%}
+.section-title .dot.red{background:#ff4d4f}
+.section-title .dot.orange{background:#fa8c16}
+.count-badge{background:#f5f5f5;padding:3px 8px;border-radius:10px;font-size:10px;color:#666}
+.cards{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+.card{border:2px solid #eee;border-radius:8px;padding:8px;position:relative}
+.card.out{border-color:#ff4d4f;background:linear-gradient(135deg,#fff1f0,white)}
+.card.low{border-color:#fa8c16;background:linear-gradient(135deg,#fff7e6,white)}
+.card.done{background:#e8f8e8;border-color:#52c41a}
+.card.done::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.1);border-radius:6px;pointer-events:none}
+.card-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;background:#f5f5f5}
+.card-img-placeholder{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#f0f0f0;border-radius:6px;color:#999;font-size:10px}
+.card-code{font-weight:600;font-size:11px;margin:6px 0 2px}
+.card-color{font-size:10px;color:#666}
+.card-sizes{margin-top:3px}
+.card-sizes-label{font-size:8px;color:#999}
+.card-sizes-value{font-size:10px;color:#333;font-weight:500}
+.card-loss{background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;position:absolute;top:6px;right:6px}
+.card-urgency{background:#fa8c16;color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;position:absolute;top:6px;right:6px}
+.card-actions{margin-top:8px;display:flex;flex-direction:column;gap:4px}
+.action-btn{padding:6px;border:none;border-radius:5px;cursor:pointer;font-size:10px;font-weight:500;width:100%}
+.action-btn.pro{background:#e0e0e0;color:#666}
+.action-btn.pro:hover:not(:disabled){background:#8c8c8c;color:white}
+.action-btn.pro.done{background:#8c8c8c;color:white}
+.action-btn.warehouse{background:#e0e0e0;color:#666}
+.action-btn.warehouse:hover:not(:disabled){background:#52c41a;color:white}
+.action-btn.warehouse.done{background:#52c41a;color:white}
+.action-btn:disabled{opacity:0.5;cursor:not-allowed}
+.card-log{margin-top:6px;padding-top:6px;border-top:1px dashed #ddd;font-size:9px;color:#999}
+.empty-state{text-align:center;padding:30px;color:#999;font-size:12px}
+.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:15px}
+.modal.show{display:flex}
+.modal-content{background:white;border-radius:10px;padding:18px;width:100%;max-width:300px}
+.modal-title{font-size:15px;font-weight:600;margin-bottom:12px;text-align:center}
+.modal-input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:12px;margin-bottom:8px}
+.modal-input:focus{outline:none;border-color:#667eea}
+.modal-note{font-size:10px;color:#999;margin-top:-6px;margin-bottom:10px}
+.modal-actions{display:flex;gap:8px}
+.modal-btn{flex:1;padding:10px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500}
+.modal-btn.cancel{background:#f0f0f0;color:#666}
+.modal-btn.confirm{background:#667eea;color:white}
+.footer{text-align:center;padding:15px;color:#999;font-size:10px}
+@media(max-width:480px){.cards{grid-template-columns:repeat(3,1fr);gap:6px}.card{padding:6px}.header h1{font-size:14px}}
+@media(max-width:360px){.cards{grid-template-columns:repeat(4,1fr);gap:4px}.card{padding:4px}.card-code{font-size:9px}}
     </style>
 </head>
 <body>
@@ -125,7 +125,7 @@ function us(s,t,n,o){if(!statusData[s])statusData[s]={p:null,w:null};var d=new D
 function rs(){var po=0,pl=0,pr=0,d=0;["urerem","saoyangyu"].forEach(function(sh){allData[sh].out.concat(allData[sh].low).forEach(function(i){var s=gs(i.skc);if(s.w)d++;else if(s.p)pr++;else i.type==="out"?po++:pl++})});document.getElementById("stat-pending-out").textContent=po;document.getElementById("stat-pending-low").textContent=pl;document.getElementById("stat-prod").textContent=pr;document.getElementById("stat-done").textContent=d}
 function gf(t){var items=curShop==="all"?allData.urerem[t].concat(allData.saoyangyu[t]):allData[curShop][t];if(curStatus!=="all")items=items.filter(function(i){var s=gs(i.skc);return curStatus==="done"?!!s.w:!s.w&&!s.p});return items}
 function rc(t){var items=gf(t),el=document.getElementById("cards-"+t);document.getElementById("count-"+t).textContent=items.length+"款";if(items.length===0){el.innerHTML='<div class="empty-state">暂无数据</div>';return}var html="";items.forEach(function(i){html+=rc2(i)});el.innerHTML=html}
-function rc2(i){var s=gs(i.skc),done=s.w!==null,prod=s.p!==null,cls=i.type==="out"?"out":"low";if(done)cls="done";var val=i.type==="out"?i.lossSales.toFixed(1):(i.urgency||0).toFixed(1),img=i.picUrl?'<img class="card-img" src="'+i.picUrl+'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">':'<div class="card-img-placeholder">无图</div>',badge=done?'':'<span class="'+(i.type==="out"?"card-loss":"card-urgency")+'">'+val+'</span>',log="";if(s.p)log+='<div>🏭 '+(s.p.n||"已确认")+'</div>';if(s.w)log+='<div>📦 '+(s.w.n||"已确认")+'</div>';return'<div class="card '+cls+'">'+badge+img+'<div class="card-code">['+SHOPS[i.shop]+'] '+i.supplierCode+'</div><div class="card-color">'+i.color+'</div><div class="card-sizes"><div class="card-sizes-label">'+(i.type==="out"?"断":"预")+'码</div><div class="card-sizes-value">'+i.sizes.join(",")+'</div></div>'+(i.minStockDays?'<div style="color:#fa8c16;font-size:9px">⏰'+i.minStockDays+'天</div>':'')+'<div class="card-actions"><button class="action-btn pro'+(prod&&!done?' done':'')+'" onclick="om(''+i.skc+'','p')" '+(done?'disabled':'')+'>'+(prod&&!done?'✓':'🏭')+'生产</button><button class="action-btn warehouse'+(done?' done':'')+'" onclick="om(''+i.skc+'','w')" '+(!prod||done?'disabled':'')+'>'+(done?'✓':'📦')+'仓库</button></div>'+(log?'<div class="card-log">'+log+'</div>':'')+'</div>'}
+function rc2(i){var s=gs(i.skc),done=s.w!==null,prod=s.p!==null,cls=i.type==="out"?"out":"low";if(done)cls="done";var val=i.type==="out"?i.lossSales.toFixed(1):(i.urgency||0).toFixed(1),img=i.picUrl?'<img class="card-img" src="'+i.picUrl+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">':'<div class="card-img-placeholder">无图</div>',badge=done?'':'<span class="'+(i.type==="out"?"card-loss":"card-urgency")+'">'+val+'</span>',log="";if(s.p)log+='<div>🏭 '+(s.p.n||"已确认")+'</div>';if(s.w)log+='<div>📦 '+(s.w.n||"已确认")+'</div>';return'<div class="card '+cls+'">'+badge+img+'<div class="card-code">['+SHOPS[i.shop]+'] '+i.supplierCode+'</div><div class="card-color">'+i.color+'</div><div class="card-sizes"><div class="card-sizes-label">'+(i.type==="out"?"断":"预")+'码</div><div class="card-sizes-value">'+i.sizes.join(",")+'</div></div>'+(i.minStockDays?'<div style="color:#fa8c16;font-size:9px">⏰'+i.minStockDays+'天</div>':'')+'<div class="card-actions"><button class="action-btn pro'+(prod&&!done?' done':'')+'" onclick="om(\''+i.skc+'\',\'p\')" '+(done?'disabled':'')+'>'+(prod&&!done?'✓':'🏭')+'生产</button><button class="action-btn warehouse'+(done?' done':'')+'" onclick="om(\''+i.skc+'\',\'w\')" '+(!prod||done?'disabled':'')+'>'+(done?'✓':'📦')+'仓库</button></div>'+(log?'<div class="card-log">'+log+'</div>':'')+'</div>'}
 function om(s,t){curAction={s:s,t:t};document.getElementById("modal-title").textContent=t==="p"?"确认生产完成":"确认仓库完成";document.getElementById("modal-name").value="";document.getElementById("modal-note").value="";document.getElementById("modal").classList.add("show");document.getElementById("modal-name").focus()}
 function cm(){document.getElementById("modal").classList.remove("show");curAction=null}
 function doConfirm(){var n=document.getElementById("modal-name").value.trim(),o=document.getElementById("modal-note").value.trim();us(curAction.s,curAction.t,n,o);cm();rs();rc("out");rc("low")}
