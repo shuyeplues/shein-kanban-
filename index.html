@@ -5,106 +5,124 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SHEIN OBM 断货预警交接 V1.1</title>
     <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;min-height:100vh}
-.header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:15px 12px}
-.header h1{font-size:16px;font-weight:600}
-.header p{font-size:11px;margin-top:5px;opacity:0.9}
-.stats{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
-.stat-card{background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:6px;text-align:center;min-width:60px}
-.stat-card .num{font-size:18px;font-weight:bold}
-.stat-card .label{font-size:9px;opacity:0.9}
-.filters{background:white;padding:10px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #eee}
-.filter-btn{padding:5px 10px;border:1px solid #ddd;background:white;border-radius:5px;cursor:pointer;font-size:11px}
-.filter-btn:hover{border-color:#667eea;color:#667eea}
-.filter-btn.active{background:#667eea;color:white;border-color:#667eea}
-.container{padding:10px}
-.section{background:white;border-radius:10px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
-.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
-.section-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
-.section-title .dot{width:8px;height:8px;border-radius:50%}
-.section-title .dot.red{background:#ff4d4f}
-.section-title .dot.orange{background:#fa8c16}
-.count-badge{background:#f5f5f5;padding:3px 8px;border-radius:10px;font-size:10px;color:#666}
-.cards{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
-.card{border:2px solid #eee;border-radius:8px;padding:8px;position:relative}
-.card.out{border:4px solid #dc2626;background:#fee2e2;box-shadow:0 0 15px rgba(220,38,38,0.6)}
-.card.low{border:4px solid #ea580c;background:#ffedd5;box-shadow:0 0 15px rgba(234,88,12,0.6)}
-.card.done{background:#e8f8e8;border-color:#52c41a}
-.card.done::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.1);border-radius:6px;pointer-events:none}
-.card-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;background:#f5f5f5}
-.card-img-placeholder{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#f0f0f0;border-radius:6px;color:#999;font-size:10px}
-.card-code{font-weight:600;font-size:11px;margin:6px 0 2px}
-.card-color{font-size:10px;color:#666}
-.card-sizes{margin-top:3px}
-.card-sizes-label{font-size:8px;color:#999}
-.card-sizes-value{font-size:10px;color:#333;font-weight:500}
-.card-loss{background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;position:absolute;top:6px;right:6px}
-.card-urgency{background:#fa8c16;color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;position:absolute;top:6px;right:6px}
-.card-actions{margin-top:8px;display:flex;flex-direction:column;gap:4px}
-.action-btn{padding:6px;border:none;border-radius:5px;cursor:pointer;font-size:10px;font-weight:500;width:100%}
-.action-btn.pro{background:#e0e0e0;color:#666}
-.action-btn.pro:hover:not(:disabled){background:#8c8c8c;color:white}
-.action-btn.pro.done{background:#8c8c8c;color:white}
-.action-btn.warehouse{background:#e0e0e0;color:#666}
-.action-btn.warehouse:hover:not(:disabled){background:#52c41a;color:white}
-.action-btn.warehouse.done{background:#52c41a;color:white}
-.action-btn:disabled{opacity:0.5;cursor:not-allowed}
-.action-btn.revoke{background:#fef3f2;color:#dc2626;margin-top:4px;font-size:9px;border:1px solid #fecaca;border-radius:4px;cursor:pointer}
-.action-btn.revoke:hover{background:#fee2e2;color:#b91c1c;font-weight:bold}.action-btn.revoke{background:#fef3f2;color:#dc2626;margin-top:4px;font-size:9px;border:1px solid #fecaca;border-radius:4px;cursor:pointer}.action-btn.revoke:hover{background:#fee2e2;color:#b91c1c;font-weight:bold}
-.card-log{margin-top:6px;padding-top:6px;border-top:1px dashed #ddd;font-size:9px;color:#999}
-.empty-state{text-align:center;padding:30px;color:#999;font-size:12px}
-.modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:15px}
-.modal.show{display:flex}
-.modal-content{background:white;border-radius:10px;padding:18px;width:100%;max-width:300px}
-.modal-title{font-size:15px;font-weight:600;margin-bottom:12px;text-align:center}
-.modal-input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:12px;margin-bottom:8px}
-.modal-input:focus{outline:none;border-color:#667eea}
-.modal-note{font-size:10px;color:#999;margin-top:-6px;margin-bottom:10px}
-.modal-actions{display:flex;gap:8px}
-.modal-btn{flex:1;padding:10px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500}
-.modal-btn.cancel{background:#f0f0f0;color:#666}
-.modal-btn.confirm{background:#667eea;color:white}
-.footer{text-align:center;padding:15px;color:#999;font-size:10px}
-@media(max-width:480px){.cards{grid-template-columns:repeat(3,1fr);gap:6px}.card{padding:6px}.header h1{font-size:14px}}
-@media(max-width:360px){.cards{grid-template-columns:repeat(4,1fr);gap:4px}.card{padding:4px}.card-code{font-size:9px}}
+        *{margin:0;padding:0;box-sizing:border-box}
+        body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:#f5f5f5;min-height:100vh}
+        .header{background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;padding:15px 12px}
+        .header h1{font-size:16px;font-weight:600}
+        .header p{font-size:11px;margin-top:5px;opacity:0.9}
+        .stats{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+        .stat-card{background:rgba(255,255,255,0.2);padding:8px 12px;border-radius:6px;text-align:center;min-width:60px}
+        .stat-card .num{font-size:18px;font-weight:bold}
+        .stat-card .label{font-size:9px;opacity:0.9}
+        .filters{background:white;padding:10px;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid #eee}
+        .filter-btn{padding:5px 10px;border:1px solid #ddd;background:white;border-radius:5px;cursor:pointer;font-size:11px}
+        .filter-btn:hover{border-color:#667eea;color:#667eea}
+        .filter-btn.active{background:#667eea;color:white;border-color:#667eea}
+        .container{padding:10px}
+        .section{background:white;border-radius:10px;padding:12px;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,0.08)}
+        .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+        .section-title{font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px}
+        .section-title .dot{width:8px;height:8px;border-radius:50%}
+        .section-title .dot.red{background:#ff4d4f}
+        .section-title .dot.orange{background:#fa8c16}
+        .count-badge{background:#f5f5f5;padding:3px 8px;border-radius:10px;font-size:10px;color:#666}
+        .cards{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(130px,1fr))}
+        .card{border:2px solid #eee;border-radius:8px;padding:8px;position:relative}
+        .card.out{border:3px solid #dc2626;background:#fef2f2;box-shadow:0 0 12px rgba(220,38,38,0.5)}
+        .card.low{border:3px solid #ea580c;background:#fff7ed;box-shadow:0 0 12px rgba(234,88,12,0.5)}
+        .card.done{background:#e8f8e8;border-color:#52c41a}
+        .card.done::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.1);border-radius:6px;pointer-events:none}
+        .card-img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:6px;background:#f5f5f5}
+        .card-img-placeholder{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;background:#f0f0f0;border-radius:6px;color:#999;font-size:10px}
+        .card-code{font-weight:600;font-size:11px;margin:6px 0 2px}
+        .card-color{font-size:10px;color:#666}
+        .card-sizes{margin-top:3px}
+        .card-sizes-label{font-size:8px;color:#999}
+        .card-sizes-value{font-size:10px;color:#333;font-weight:500}
+        .card-loss{background:#ff4d4f;color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;position:absolute;top:6px;right:6px}
+        .card-urgency{background:#fa8c16;color:white;padding:2px 6px;border-radius:4px;font-size:10px;font-weight:500;position:absolute;top:6px;right:6px}
+        .card-actions{margin-top:8px;display:flex;flex-direction:column;gap:4px}
+        .action-btn{padding:6px;border:none;border-radius:5px;cursor:pointer;font-size:10px;font-weight:500;width:100%}
+        .action-btn.pro{background:#e0e0e0;color:#666}
+        .action-btn.pro:hover:not(:disabled){background:#8c8c8c;color:white}
+        .action-btn.pro.done{background:#8c8c8c;color:white}
+        .action-btn.warehouse{background:#e0e0e0;color:#666}
+        .action-btn.warehouse:hover:not(:disabled){background:#52c41a;color:white}
+        .action-btn.warehouse.done{background:#52c41a;color:white}
+        .action-btn:disabled{opacity:0.5;cursor:not-allowed}
+        .action-btn.revoke{background:#fef3f2;color:#dc2626;margin-top:4px;font-size:9px;border:1px solid #fecaca;border-radius:4px;cursor:pointer}
+        .action-btn.revoke:hover{background:#fee2e2;color:#b91c1c;font-weight:bold}
+        .card-log{margin-top:6px;padding-top:6px;border-top:1px dashed #ddd;font-size:9px;color:#999}
+        .empty-state{text-align:center;padding:30px;color:#999;font-size:12px}
+        .modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;padding:15px}
+        .modal.show{display:flex}
+        .modal-content{background:white;border-radius:10px;padding:18px;width:100%;max-width:300px}
+        .modal-title{font-size:15px;font-weight:600;margin-bottom:12px;text-align:center}
+        .modal-input{width:100%;padding:10px;border:1px solid #ddd;border-radius:6px;font-size:12px;margin-bottom:8px}
+        .modal-input:focus{outline:none;border-color:#667eea}
+        .modal-note{font-size:10px;color:#999;margin-top:-6px;margin-bottom:10px}
+        .modal-actions{display:flex;gap:8px}
+        .modal-btn{flex:1;padding:10px;border:none;border-radius:6px;cursor:pointer;font-size:12px;font-weight:500}
+        .modal-btn.cancel{background:#f0f0f0;color:#666}
+        .modal-btn.confirm{background:#667eea;color:white}
+        .footer{text-align:center;padding:15px;color:#999;font-size:10px}
+        @media(max-width:480px){ .cards{grid-template-columns:repeat(3,1fr);gap:6px} .card{padding:6px} .header h1{font-size:14px}}
+        @media(max-width:360px){ .cards{grid-template-columns:repeat(4,1fr);gap:4px} .card{padding:4px} .card-code{font-size:9px}}
+        /* 打印样式 */
+        @media print {
+            @page { size: A4; margin: 10mm; }
+            body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .filters { display: none !important; }
+            .footer { display: none !important; }
+            .modal { display: none !important; }
+            .header { background: #667eea !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .card-actions { display: none !important; }
+            .card { border: 1px solid #ccc !important; break-inside: avoid; page-break-inside: avoid; }
+            .card.out { background: #fef2f2 !important; border-color: #dc2626 !important; }
+            .card.low { background: #fff7ed !important; border-color: #ea580c !important; }
+            .card.done { background: #e8f8e8 !important; border-color: #52c41a !important; }
+            .card-loss { background: #ff4d4f !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .card-urgency { background: #fa8c16 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            .container { padding: 5px; }
+            .section { margin-bottom: 10px; page-break-inside: avoid; }
+        }
     </style>
 </head>
 <body>
     <div class="header">
         <h1>SHEIN OBM 断货预警交接</h1>
-        <p id="subtitle">2026年04月16日 20:30 | 断货率:26% | 预警率:74%</p>
+        <p id="subtitle">2026年04月17日 08:30 | 断货率:21% | 预警率:79%</p>
         <div class="stats">
-            <div class="stat-card"><div class="num" id="stat-pending-out">12</div><div class="label">断货待处理</div></div>
-            <div class="stat-card"><div class="num" id="stat-pending-low">35</div><div class="label">预警待处理</div></div>
+            <div class="stat-card"><div class="num" id="stat-pending-out">9</div><div class="label">断货待处理</div></div>
+            <div class="stat-card"><div class="num" id="stat-pending-low">33</div><div class="label">预警待处理</div></div>
             <div class="stat-card"><div class="num" id="stat-prod">0</div><div class="label">生产中</div></div>
             <div class="stat-card"><div class="num" id="stat-done">0</div><div class="label">已完成</div></div>
         </div>
     </div>
     <div class="filters">
         <button class="filter-btn shop-btn active" data-shop="all">全部</button>
-        <button class="filter-btn print-btn" onclick="window.print()">🖨️ 打印</button>
         <button class="filter-btn shop-btn" data-shop="urerem">UREEM</button>
         <button class="filter-btn shop-btn" data-shop="saoyangyu">SAOYANGYU</button>
         <button class="filter-btn status-btn" data-status="pending">待处理</button>
         <button class="filter-btn status-btn" data-status="done">已完成</button>
         <button class="filter-btn status-btn active" data-status="all">全部</button>
+        <button class="filter-btn print-btn" onclick="window.print()">🖨️ 打印</button>
     </div>
     <div class="container">
         <div class="section">
             <div class="section-header">
-                <div class="section-title"><span class="dot red"></span>已断货 <span id="count-out">12款</span></div>
+                <div class="section-title"><span class="dot red"></span>已断货 <span id="count-out">9款</span></div>
             </div>
             <div class="cards" id="cards-out"></div>
         </div>
         <div class="section">
             <div class="section-header">
-                <div class="section-title"><span class="dot orange"></span>即将断码 <span id="count-low">35款</span></div>
+                <div class="section-title"><span class="dot orange"></span>即将断码 <span id="count-low">33款</span></div>
             </div>
             <div class="cards" id="cards-low"></div>
         </div>
     </div>
-    <div class="footer">数据更新: 2026年04月16日 20:30 | 存储在浏览器本地</div>
+    <div class="footer">数据更新: 2026年04月17日 08:30 | 存储在浏览器本地</div>
     <div class="modal" id="modal">
         <div class="modal-content">
             <div class="modal-title" id="modal-title">确认操作</div>
@@ -119,12 +137,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;b
     </div>
     <script>
 var SHOPS={"urerem":"UREEM","saoyangyu":"SAOYANGYU"};
-// 每天自动重置状态
+// 每天自动重置状态（只比较年月日）
 var todayDate=new Date().toISOString().slice(0,10);
 var savedDate=localStorage.getItem("skc_date");
-if(savedDate!==todayDate){localStorage.removeItem("skc_v6");localStorage.setItem("skc_date",todayDate);}
+if(savedDate!==todayDate){
+    localStorage.removeItem("skc_v6");
+    localStorage.setItem("skc_date",todayDate);
+}
 var statusData=JSON.parse(localStorage.getItem("skc_v6")||"{}");
-var allData={"urerem":{"out":[{supplierCode:"W05301",skc:"sz25040722873221113",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/04/07/c6/1744012371deadc89dffd73cc7aec45ec787b91efe.jpg",color:"白色",sizes:["0XL", "1XL"],type:"out",shop:"urerem",lossSales:7.7},{supplierCode:"6605",skc:"sz2406283173202962",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/02/26/4c/1740556595108f526144e2a4d240521a05b5710ac1.jpg",color:"多色",sizes:["XL"],type:"out",shop:"urerem",lossSales:3.5},{supplierCode:"7201",skc:"sz251111557223513110",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/11/00/17732142103d6f79669264822acab7697722126944.jpg",color:"多色",sizes:["M"],type:"out",shop:"urerem",lossSales:2.0},{supplierCode:"6816",skc:"sz25040739930353155",picUrl:"https://img.ltwebstatic.com/v4/p/spmp/2025/12/13/40/17656117640f9cd1c6fa8620bd8aae3111f21de1b8.png",color:"宝蓝色",sizes:["M"],type:"out",shop:"urerem",lossSales:1.9},{supplierCode:"6744",skc:"sz25021847847763883",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/15/7f/1755253300fa26bc561a7fa8ac9a6df42fae4f2122.jpg",color:"宝蓝色",sizes:["XS", "M"],type:"out",shop:"urerem",lossSales:1.9},{supplierCode:"6738",skc:"sz25021596171318722",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/09/26/a5/17588748796489251ca6a25b29c2828e5486ea7830.jpg",color:"黑色",sizes:["M", "XL"],type:"out",shop:"urerem",lossSales:1.8},{supplierCode:"W053-标码",skc:"sz2408263337410170",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/01/14/44/17368175968c76c194fbc4319ab01e137315ba693b.jpg",color:"藏蓝色",sizes:["XXL"],type:"out",shop:"urerem",lossSales:1.7},{supplierCode:"7260",skc:"sz260114174598584398774",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/04/06/84/1775464294dd31071d3f6dc49c99f5c394f4247463.jpg",color:"香槟色",sizes:["S"],type:"out",shop:"urerem",lossSales:1.0},{supplierCode:"6599",skc:"sz2406289344309619",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/10/10/e4/17285409383868b80bda773d4ccd10b5acdb4d1926.jpg",color:"黄色",sizes:["S"],type:"out",shop:"urerem",lossSales:0.6},{supplierCode:"7211",skc:"sz251205688414315796",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/23/98/1774244096a3833d4ffbc2725bdebabae0f30f1398.jpg",color:"多色",sizes:["XL"],type:"out",shop:"urerem",lossSales:0.4},{supplierCode:"6732",skc:"sz2501105338598183",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/09/01/f6/175669783472ac7536d5bdc902691dd541b551f0bd.jpg",color:"玫红色",sizes:["M"],type:"out",shop:"urerem",lossSales:0.1}],"low":[{supplierCode:"6738",skc:"sz25021596171328006",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/03/20/90/17424682868778eebc47d143030072407e59974810.jpg",color:"卡其色",sizes:["S", "M", "L"],type:"low",shop:"urerem",minStockDays:0.1,urgency:22.363636363636363},{supplierCode:"227506黑色",skc:"sz25042835090935432",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/04/28/dd/17458369353893469befa7c734f8bdc0713ab08f82.jpg",color:"黑色",sizes:["S", "M", "L"],type:"low",shop:"urerem",minStockDays:1.7,urgency:8.851851851851851},{supplierCode:"6816",skc:"sz25040739930344179",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/11/22/c6/1763804322c96364422d818bfc0c651006a12ab83f.jpg",color:"红色",sizes:["S", "M"],type:"low",shop:"urerem",minStockDays:2.4,urgency:5.4411764705882355},{supplierCode:"6597-大码",skc:"sz2408084286487871",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/08/08/7f/1723083283994f0e4ece4505792e1c66f225d65c2c.jpg",color:"黑白色",sizes:["1XL", "4XL"],type:"low",shop:"urerem",minStockDays:0.2,urgency:5.0},{supplierCode:"6605",skc:"sz2406283173202962",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/02/26/4c/1740556595108f526144e2a4d240521a05b5710ac1.jpg",color:"多色",sizes:["M", "L"],type:"low",shop:"urerem",minStockDays:0.4,urgency:4.5},{supplierCode:"6597",skc:"sz2406280900169952",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/04/15/b1/174470420206db4eaf28cfb3e8d02d2ed9ad061141.jpg",color:"蓝色",sizes:["L", "XL"],type:"low",shop:"urerem",minStockDays:0.7,urgency:4.058823529411765},{supplierCode:"6786",skc:"sz25032197746312768",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/04/08/70/177561948763cbeafe6eaefb9d2e0daf4a94fdc5dd_square.jpg",color:"淡蓝色",sizes:["M"],type:"low",shop:"urerem",minStockDays:1.0,urgency:3.85},{supplierCode:"W053-标码",skc:"sz2408263337493479",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/09/24/ff/1727170494d57d804e089e08f4226acf59090601a3.jpg",color:"黑色",sizes:["L", "XL"],type:"low",shop:"urerem",minStockDays:4.3,urgency:2.8679245283018866},{supplierCode:"6805",skc:"sz25040722918442117",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/22/9a/175315400322f61fb58ea110d3a86b8db08777dfd1.jpg",color:"卡其色",sizes:["M"],type:"low",shop:"urerem",minStockDays:3.8,urgency:2.4375},{supplierCode:"2275",skc:"sz2406282419120800",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/19/34/1752889190069c0df6c3720066a4ef71c5b6312e3d.jpg",color:"黑色",sizes:["0XL", "2XL", "5XL"],type:"low",shop:"urerem",minStockDays:3.3,urgency:2.3953488372093026},{supplierCode:"6816",skc:"sz25040739930356511",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/11/22/cb/1763804342036657cdf0dcdf1013448ee11b848ef2.jpg",color:"紫红色",sizes:["XS", "S"],type:"low",shop:"urerem",minStockDays:2.0,urgency:2.1333333333333333},{supplierCode:"6744",skc:"sz25021847847728239",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/15/25/17552521418616542a1b019954cd55dcb32440b60d.jpg",color:"黑色",sizes:["M", "L"],type:"low",shop:"urerem",minStockDays:2.2,urgency:2.0624999999999996},{supplierCode:"6816",skc:"sz25040739930328212",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/02/04/aa/1770183592a9c9e1b9f53e0ca98f74123cfd0b09b3.jpg",color:"宝蓝色撞白",sizes:["XS", "S", "L"],type:"low",shop:"urerem",minStockDays:1.2,urgency:2.0454545454545454},{supplierCode:"6805",skc:"sz25040722918488296",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/30/c0/175383864514e7fb8dc94c593f0641140b948c95b6.jpg",color:"蓝色",sizes:["M"],type:"low",shop:"urerem",minStockDays:0.4,urgency:1.9285714285714288},{supplierCode:"2275-蓝底",skc:"sz2412095155060118",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/19/8f/1752889962039f249db22d81fe163262dc008bacba.jpg",color:"蓝色",sizes:["1XL"],type:"low",shop:"urerem",minStockDays:3.0,urgency:1.65},{supplierCode:"2260-标码",skc:"sz2409116124680781",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/11/01/9b/17304489113857f78944e7a6361a87733a5e07463f.jpg",color:"黑色",sizes:["S", "M"],type:"low",shop:"urerem",minStockDays:4.2,urgency:1.4423076923076923},{supplierCode:"HS128",skc:"sz25062821107147441",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/10/30/12/1761787764704c169b1fc0c0beb4efaf016c92e390.jpg",color:"粉色",sizes:["S"],type:"low",shop:"urerem",minStockDays:3.4,urgency:1.2727272727272725},{supplierCode:"6816",skc:"sz25040739930308425",picUrl:"https://img.ltwebstatic.com/v4/p/spmp/2025/12/12/d6/1765532516c9e80a191d2f9bb611f196c627205438.png",color:"红色",sizes:["S", "M"],type:"low",shop:"urerem",minStockDays:3.5,urgency:1.2222222222222223},{supplierCode:"W053-标码",skc:"sz2408263337478417",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/03/24/b6/174279537139cbf737aa8dfd5adb9e8cfac6ea5e3c.jpg",color:"白色",sizes:["XL"],type:"low",shop:"urerem",minStockDays:3.8,urgency:1.2083333333333333},{supplierCode:"2275",skc:"sz2406282419138996",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/30/b3/1756546192e2cbbbfcc6fcc3edafaa5e85a3937741.jpg",color:"玫红色",sizes:["0XL"],type:"low",shop:"urerem",minStockDays:3.3,urgency:1.1162790697674418},{supplierCode:"2260-标码",skc:"sz2409116124635409",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/09/11/18/17260380170cb59ad60a6199cbe39cc282a34dc96c.jpg",color:"灰色",sizes:["M"],type:"low",shop:"urerem",minStockDays:4.0,urgency:0.96},{supplierCode:"W05301",skc:"sz25040722873221113",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/04/07/c6/1744012371deadc89dffd73cc7aec45ec787b91efe.jpg",color:"白色",sizes:["3XL"],type:"low",shop:"urerem",minStockDays:1.9,urgency:0.9310344827586208},{supplierCode:"6816",skc:"sz25040739930362648",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/04/15/b1/17762151106de55d396e4bb682cb2424734c67cc2f.jpg",color:"灰绿",sizes:["L"],type:"low",shop:"urerem",minStockDays:4.3,urgency:0.9245283018867926},{supplierCode:"6605",skc:"sz2406283173267191",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/03/18/b0/1742265002a7b49b5d95a94b00526bc6dcecbcfdd7.jpg",color:"多色",sizes:["L"],type:"low",shop:"urerem",minStockDays:2.3,urgency:0.787878787878788},{supplierCode:"6732",skc:"sz2501105338528182",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/21/57/1753078988c6a30dfcb31824f3312f99a8cf4d1664.jpg",color:"黑色",sizes:["XL"],type:"low",shop:"urerem",minStockDays:3.3,urgency:0.7674418604651163},{supplierCode:"6805",skc:"sz25040722918472374",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/30/e9/175383868790ea7728a96f2f0cb3a3e5898f9678fb.jpg",color:"黄色",sizes:["M"],type:"low",shop:"urerem",minStockDays:5.0,urgency:0.6666666666666666},{supplierCode:"6744",skc:"sz25021847847722398",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/15/09/17552520223678b644a11e6e7b79549568c06ac502.jpg",color:"卡其色",sizes:["M"],type:"low",shop:"urerem",minStockDays:3.9,urgency:0.6326530612244897},{supplierCode:"6786",skc:"sz25032197746382395",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/05/97/175435799667b4c4b271f5183889a422889b601971.jpg",color:"荧光绿",sizes:["XL"],type:"low",shop:"urerem",minStockDays:3.6,urgency:0.6086956521739131},{supplierCode:"6605",skc:"sz2406283173293983",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/07/05/59/172017597579832714c84d3535f3099bf7ca6c01bb.jpg",color:"多色",sizes:["L"],type:"low",shop:"urerem",minStockDays:5.0,urgency:0.6},{supplierCode:"6744",skc:"sz25021847847725305",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/15/b2/1755251940a420b8c2948a12d453cd6cae45981e89.jpg",color:"绿色",sizes:["XS"],type:"low",shop:"urerem",minStockDays:2.1,urgency:0.4516129032258064},{supplierCode:"7260",skc:"sz260114174598584398774",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/04/06/84/1775464294dd31071d3f6dc49c99f5c394f4247463.jpg",color:"香槟色",sizes:["M"],type:"low",shop:"urerem",minStockDays:1.1,urgency:0.42857142857142855},{supplierCode:"7211",skc:"sz251205688414315796",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/23/98/1774244096a3833d4ffbc2725bdebabae0f30f1398.jpg",color:"多色",sizes:["M"],type:"low",shop:"urerem",minStockDays:1.1,urgency:0.42857142857142855}]},"saoyangyu":{"out":[{supplierCode:"6973",skc:"sz25070853351973574",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/01/17/25/176861555073007f34108eacb9b8a96722a8befd5b.jpg",color:"紫色",sizes:["XS"],type:"out",shop:"saoyangyu",lossSales:0.1}],"low":[{supplierCode:"6924",skc:"sz260105153950770355156",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/31/71/1774951565136ee53c5ec0c90e89a93e1da0914925.jpg",color:"黑色",sizes:["Petite XS"],type:"low",shop:"saoyangyu",minStockDays:0.8,urgency:1.4444444444444444},{supplierCode:"6924",skc:"sz25072999002478288",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/11/20/16/1763604691ca01fb03d099c1ac105a643782e7bbb2.jpg",color:"黑色",sizes:["S"],type:"low",shop:"saoyangyu",minStockDays:4.6,urgency:1.0535714285714286},{supplierCode:"6873",skc:"sz25052724238238898",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/09/27/88/175894156090aaea815df29d823877ef66be14785d.jpg",color:"黑色",sizes:["L"],type:"low",shop:"saoyangyu",minStockDays:4.4,urgency:0.16666666666666666}]}};
+var allData={"urerem":{"out":[{supplierCode:"7201",skc:"sz251111557223513110",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/11/00/17732142103d6f79669264822acab7697722126944.jpg",color:"多色",sizes:["M"],type:"out",shop:"urerem",lossSales:2.0},{supplierCode:"6738",skc:"sz25021596171318722",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/09/26/a5/17588748796489251ca6a25b29c2828e5486ea7830.jpg",color:"黑色",sizes:["M", "XL"],type:"out",shop:"urerem",lossSales:1.8},{supplierCode:"W053-标码",skc:"sz2408263337410170",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/01/14/44/17368175968c76c194fbc4319ab01e137315ba693b.jpg",color:"藏蓝色",sizes:["XXL"],type:"out",shop:"urerem",lossSales:1.6},{supplierCode:"6744",skc:"sz25021847847763883",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/15/7f/1755253300fa26bc561a7fa8ac9a6df42fae4f2122.jpg",color:"宝蓝色",sizes:["XS", "M"],type:"out",shop:"urerem",lossSales:1.6},{supplierCode:"7260",skc:"sz260114174598584398774",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/04/06/84/1775464294dd31071d3f6dc49c99f5c394f4247463.jpg",color:"香槟色",sizes:["S"],type:"out",shop:"urerem",lossSales:1.0},{supplierCode:"7242",skc:"sz251210150917340499466",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/28/53/17746875187e7757780c46e0e1d844547de516c420.jpg",color:"黑色",sizes:["L"],type:"out",shop:"urerem",lossSales:0.9},{supplierCode:"6599",skc:"sz2406289344309619",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/10/10/e4/17285409383868b80bda773d4ccd10b5acdb4d1926.jpg",color:"黄色",sizes:["S"],type:"out",shop:"urerem",lossSales:0.6},{supplierCode:"7211",skc:"sz251205688414315796",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/23/98/1774244096a3833d4ffbc2725bdebabae0f30f1398.jpg",color:"多色",sizes:["XL"],type:"out",shop:"urerem",lossSales:0.4}],"low":[{supplierCode:"227506黑色",skc:"sz25042835090935432",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/04/28/dd/17458369353893469befa7c734f8bdc0713ab08f82.jpg",color:"黑色",sizes:["S", "M", "L"],type:"low",shop:"urerem",minStockDays:1.2,urgency:9.409090909090908},{supplierCode:"6738",skc:"sz25021596171328006",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/03/20/90/17424682868778eebc47d143030072407e59974810.jpg",color:"卡其色",sizes:["M"],type:"low",shop:"urerem",minStockDays:0.2,urgency:5.25},{supplierCode:"6597",skc:"sz2406280900169952",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/04/15/b1/174470420206db4eaf28cfb3e8d02d2ed9ad061141.jpg",color:"蓝色",sizes:["L", "XL"],type:"low",shop:"urerem",minStockDays:0.7,urgency:4.176470588235294},{supplierCode:"6805",skc:"sz25040722918488296",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/30/c0/175383864514e7fb8dc94c593f0641140b948c95b6.jpg",color:"蓝色",sizes:["M", "L"],type:"low",shop:"urerem",minStockDays:0.4,urgency:3.642857142857143},{supplierCode:"2275",skc:"sz2406282419120800",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/19/34/1752889190069c0df6c3720066a4ef71c5b6312e3d.jpg",color:"黑色",sizes:["0XL", "2XL", "5XL"],type:"low",shop:"urerem",minStockDays:2.4,urgency:3.61764705882353},{supplierCode:"6597-大码",skc:"sz2408084286487871",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/08/08/7f/1723083283994f0e4ece4505792e1c66f225d65c2c.jpg",color:"黑白色",sizes:["1XL"],type:"low",shop:"urerem",minStockDays:0.3,urgency:2.5384615384615383},{supplierCode:"HS128",skc:"sz25062821107147441",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/10/30/12/1761787764704c169b1fc0c0beb4efaf016c92e390.jpg",color:"粉色",sizes:["S", "M"],type:"low",shop:"urerem",minStockDays:3.3,urgency:2.186046511627907},{supplierCode:"6805",skc:"sz25040722918442117",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/22/9a/175315400322f61fb58ea110d3a86b8db08777dfd1.jpg",color:"卡其色",sizes:["M"],type:"low",shop:"urerem",minStockDays:4.0,urgency:2.18},{supplierCode:"6597",skc:"sz2406280900144465",picUrl:"http://img.ltwebstatic.com/images3_pi/2024/07/09/2f/172051523139abe3b94478999e1935bda96ba7fb33.jpg",color:"白色",sizes:["L"],type:"low",shop:"urerem",minStockDays:5.0,urgency:2.15},{supplierCode:"2260-标码",skc:"sz2409116124680781",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/11/01/9b/17304489113857f78944e7a6361a87733a5e07463f.jpg",color:"黑色",sizes:["S", "XL"],type:"low",shop:"urerem",minStockDays:2.9,urgency:1.6410256410256412},{supplierCode:"2275-蓝底",skc:"sz2412095155060118",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/07/19/8f/1752889962039f249db22d81fe163262dc008bacba.jpg",color:"蓝色",sizes:["1XL"],type:"low",shop:"urerem",minStockDays:3.0,urgency:1.575},{supplierCode:"6786",skc:"sz25032197746313848",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/05/95/1754357989354ad6e80a953415989958a824d36484.jpg",color:"红色",sizes:["M"],type:"low",shop:"urerem",minStockDays:4.4,urgency:1.0925925925925926},{supplierCode:"6816",skc:"sz25040739930328212",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/02/04/aa/1770183592a9c9e1b9f53e0ca98f74123cfd0b09b3.jpg",color:"宝蓝色撞白",sizes:["XS", "S"],type:"low",shop:"urerem",minStockDays:1.8,urgency:0.9642857142857144},{supplierCode:"6816",skc:"sz25040739930341533",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/11/22/42/176380424838a461529d4da5aba4fa78eae274f290.jpg",color:"粉色",sizes:["XL"],type:"low",shop:"urerem",minStockDays:4.9,urgency:0.6949152542372881},{supplierCode:"6605",skc:"sz2406283173202962",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/02/26/4c/1740556595108f526144e2a4d240521a05b5710ac1.jpg",color:"多色",sizes:["M"],type:"low",shop:"urerem",minStockDays:4.8,urgency:0.6896551724137931},{supplierCode:"6744",skc:"sz25021847847722398",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/15/09/17552520223678b644a11e6e7b79549568c06ac502.jpg",color:"卡其色",sizes:["M"],type:"low",shop:"urerem",minStockDays:3.7,urgency:0.6382978723404255},{supplierCode:"6744",skc:"sz25021847847725305",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/15/b2/1755251940a420b8c2948a12d453cd6cae45981e89.jpg",color:"绿色",sizes:["XS"],type:"low",shop:"urerem",minStockDays:1.8,urgency:0.6071428571428572},{supplierCode:"6786",skc:"sz25032197746312768",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/04/08/70/177561948763cbeafe6eaefb9d2e0daf4a94fdc5dd_square.jpg",color:"淡蓝色",sizes:["XS"],type:"low",shop:"urerem",minStockDays:3.8,urgency:0.5},{supplierCode:"7260",skc:"sz260114174598584398774",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/04/06/84/1775464294dd31071d3f6dc49c99f5c394f4247463.jpg",color:"香槟色",sizes:["M"],type:"low",shop:"urerem",minStockDays:1.0,urgency:0.5},{supplierCode:"6605",skc:"sz2406283173267191",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/03/18/b0/1742265002a7b49b5d95a94b00526bc6dcecbcfdd7.jpg",color:"多色",sizes:["L"],type:"low",shop:"urerem",minStockDays:3.0,urgency:0.5},{supplierCode:"6719",skc:"sz251108361335594288",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/11/08/f4/17625865150630dec5cab4c8c69dde9951c76f1277.jpg",color:"黑色",sizes:["S"],type:"low",shop:"urerem",minStockDays:1.0,urgency:0.5},{supplierCode:"7226",skc:"sz251210151476142282354",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/04/01/32/177501194443a5c7d82778a6135ad857719ce7b201.jpg",color:"红色",sizes:["L"],type:"low",shop:"urerem",minStockDays:5.0,urgency:0.43333333333333335},{supplierCode:"6674",skc:"sz25021536237025696",picUrl:"https://img.ltwebstatic.com/images3_spmp/2025/02/15/a9/1739597147b55f36997cad5b6683f3cea89c0fca64.jpg",color:"深灰色",sizes:["M"],type:"low",shop:"urerem",minStockDays:4.1,urgency:0.33333333333333337},{supplierCode:"6816",skc:"sz25040739930356511",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/11/22/cb/1763804342036657cdf0dcdf1013448ee11b848ef2.jpg",color:"紫红色",sizes:["M"],type:"low",shop:"urerem",minStockDays:4.3,urgency:0.2641509433962264},{supplierCode:"7211",skc:"sz251205688414315796",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/23/98/1774244096a3833d4ffbc2725bdebabae0f30f1398.jpg",color:"多色",sizes:["M"],type:"low",shop:"urerem",minStockDays:1.7,urgency:0.2222222222222222},{supplierCode:"7180",skc:"sz260112152574142681141",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/12/95/17733187386c0debe1525e39c2e2eb176a1eb4870a.jpg",color:"卡其色",sizes:["1XL"],type:"low",shop:"urerem",minStockDays:3.3,urgency:0.13953488372093023},{supplierCode:"6599",skc:"sz2406289344309619",picUrl:"https://img.ltwebstatic.com/images3_spmp/2024/10/10/e4/17285409383868b80bda773d4ccd10b5acdb4d1926.jpg",color:"黄色",sizes:["XL"],type:"low",shop:"urerem",minStockDays:3.3,urgency:0.06976744186046512}]},"saoyangyu":{"out":[{supplierCode:"6973",skc:"sz25070853351973574",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/01/17/25/176861555073007f34108eacb9b8a96722a8befd5b.jpg",color:"紫色",sizes:["XS"],type:"out",shop:"saoyangyu",lossSales:1.3}],"low":[{supplierCode:"6924",skc:"sz25072999002436009",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/08/26/b1/175620076417d9723a3f54ac79933fe53536a81e0a.jpg",color:"黑色",sizes:["S", "M"],type:"low",shop:"saoyangyu",minStockDays:1.0,urgency:5.35},{supplierCode:"6973-矮款",skc:"sz251105543146124711",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/11/05/df/176231165384792c82fdb70b74af915a0a7b328b15.jpg",color:"蓝色",sizes:["Petite L"],type:"low",shop:"saoyangyu",minStockDays:1.5,urgency:2.44},{supplierCode:"6924",skc:"sz260105153950770355156",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/03/31/71/1774951565136ee53c5ec0c90e89a93e1da0914925.jpg",color:"黑色",sizes:["Petite XS"],type:"low",shop:"saoyangyu",minStockDays:0.9,urgency:1.2105263157894737},{supplierCode:"6873",skc:"sz25052724238238898",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/09/27/88/175894156090aaea815df29d823877ef66be14785d.jpg",color:"黑色",sizes:["L"],type:"low",shop:"saoyangyu",minStockDays:1.4,urgency:1.2083333333333333},{supplierCode:"6924",skc:"sz25072999002490044",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2025/12/05/c9/176490246194cd1a8198e1675e57eab1fda16bbda1.jpg",color:"咖啡棕",sizes:["S", "L"],type:"low",shop:"saoyangyu",minStockDays:3.5,urgency:1.0},{supplierCode:"6973",skc:"sz25070853351973574",picUrl:"https://img.ltwebstatic.com/v4/j/spmp/2026/01/17/25/176861555073007f34108eacb9b8a96722a8befd5b.jpg",color:"紫色",sizes:["S"],type:"low",shop:"saoyangyu",minStockDays:4.0,urgency:0.4}]}};
 var curShop="all",curStatus="all",curAction=null;
 function gs(s){return statusData[s]||{p:null,w:null}}
 function ss(){localStorage.setItem("skc_v6",JSON.stringify(statusData))}
@@ -132,9 +153,10 @@ function us(s,t,n,o){if(!statusData[s])statusData[s]={p:null,w:null};var d=new D
 function rs(){var po=0,pl=0,pr=0,d=0;["urerem","saoyangyu"].forEach(function(sh){allData[sh].out.concat(allData[sh].low).forEach(function(i){var s=gs(i.skc);if(s.w)d++;else if(s.p)pr++;else i.type==="out"?po++:pl++})});document.getElementById("stat-pending-out").textContent=po;document.getElementById("stat-pending-low").textContent=pl;document.getElementById("stat-prod").textContent=pr;document.getElementById("stat-done").textContent=d}
 function gf(t){var items=curShop==="all"?allData.urerem[t].concat(allData.saoyangyu[t]):allData[curShop][t];if(curStatus!=="all")items=items.filter(function(i){var s=gs(i.skc);return curStatus==="done"?!!s.w:!s.w&&!s.p});return items}
 function rc(t){var items=gf(t),el=document.getElementById("cards-"+t);document.getElementById("count-"+t).textContent=items.length+"款";if(items.length===0){el.innerHTML='<div class="empty-state">暂无数据</div>';return}var html="";items.forEach(function(i){html+=rc2(i)});el.innerHTML=html}
-function rc2(i){var s=gs(i.skc),done=s.w!==null,prod=s.p!==null,cls=i.type==="out"?"out":"low";if(done)cls="done";var val=i.type==="out"?i.lossSales.toFixed(1):(i.urgency||0).toFixed(1),img=i.picUrl?'<img class="card-img" src="'+i.picUrl+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">':'<div class="card-img-placeholder">无图</div>',badge=done?'':'<span class="'+(i.type==="out"?"card-loss":"card-urgency")+'">'+val+'</span>',log="";if(s.p)log+='<div>🏭 '+(s.p.n||"已确认")+'</div>';if(s.w)log+='<div>📦 '+(s.w.n||"已确认")+'</div>';return'<div class="card '+cls+'">'+badge+img+'<div class="card-code">['+SHOPS[i.shop]+'] '+i.supplierCode+'</div><div class="card-color">'+i.color+'</div><div class="card-sizes"><div class="card-sizes-label">'+(i.type==="out"?"断":"预")+'码</div><div class="card-sizes-value">'+i.sizes.join(",")+'</div></div>'+(i.minStockDays?'<div style="color:#fa8c16;font-size:9px">⏰'+i.minStockDays+'天</div>':'')+'<div class="card-actions"><button class="action-btn pro'+(prod&&!done?' done':'')+'" onclick="om(\''+i.skc+'\',\'p\')" '+(done?'disabled':'')+'>'+(prod&&!done?'✓':'🏭')+'生产</button><button class="action-btn warehouse'+(done?' done':'')+'" onclick="om(\''+i.skc+'\',\'w\')" '+(!prod||done?'disabled':'')+'>'+(done?'✓':'📦')+'仓库</button></div>'+(log?'<div class="card-log">'+log+'</div>':'')+'</div>'}
+function rc2(i){var s=gs(i.skc),done=s.w!==null,prod=s.p!==null,cls=i.type==="out"?"out":"low";if(done)cls="done";var val=i.type==="out"?i.lossSales.toFixed(1):(i.urgency||0).toFixed(1),img=i.picUrl?'<img class="card-img" src="'+i.picUrl+'" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">':'<div class="card-img-placeholder">无图</div>',badge=done?'':'<span class="'+(i.type==="out"?"card-loss":"card-urgency")+'">'+val+'</span>',log="";if(s.p)log+='<div>🏭 '+(s.p.n||"已确认")+'</div>';if(s.w)log+='<div>📦 '+(s.w.n||"已确认")+'</div>';return'<div class="card '+cls+'">'+badge+img+'<div class="card-code">['+SHOPS[i.shop]+'] '+i.supplierCode+'</div><div class="card-color">'+i.color+'</div><div class="card-sizes"><div class="card-sizes-label">'+(i.type==="out"?"断":"预")+'码</div><div class="card-sizes-value">'+i.sizes.join(",")+'</div></div>'+(i.minStockDays?'<div style="color:#fa8c16;font-size:9px">⏰'+i.minStockDays+'天</div>':'')+'<div class="card-actions"><button class="action-btn pro'+(prod&&!done?' done':'')+'" onclick="om(''+i.skc+'','p')" '+(done?'disabled':'')+'>'+(prod&&!done?'✓':'🏭')+'生产</button><button class="action-btn warehouse'+(done?' done':'')+'" onclick="om(''+i.skc+'','w')" '+(!prod||done?'disabled':'')+'>'+(done?'✓':'📦')+'仓库</button>'+(s.p?'<button class="action-btn revoke" onclick="rv(''+i.skc+'','p')">↩️撤回</button>':'')+(s.w?'<button class="action-btn revoke" onclick="rv(''+i.skc+'','w')">↩️撤回</button>':'')+</div>'+(log?'<div class="card-log">'+log+'</div>':'')+'</div>'}
 function om(s,t){curAction={s:s,t:t};document.getElementById("modal-title").textContent=t==="p"?"确认生产完成":"确认仓库完成";document.getElementById("modal-name").value="";document.getElementById("modal-note").value="";document.getElementById("modal").classList.add("show");document.getElementById("modal-name").focus()}
 function cm(){document.getElementById("modal").classList.remove("show");curAction=null}
+function rv(s,t){if(!confirm(t==="all"?"确定要撤回全部确认吗？":"确定要撤回"+(t==="p"?"生产":"仓库")+"确认吗？"))return;if(statusData[s]){if(t==="all"){statusData[s].p=null;statusData[s].w=null}else if(t==="p")statusData[s].p=null;else statusData[s].w=null;ss();rs();rc("out");rc("low")}}
 function doConfirm(){var n=document.getElementById("modal-name").value.trim(),o=document.getElementById("modal-note").value.trim();us(curAction.s,curAction.t,n,o);cm();rs();rc("out");rc("low")}
 document.querySelectorAll(".shop-btn").forEach(function(b){b.onclick=function(){document.querySelectorAll(".shop-btn").forEach(function(x){x.classList.remove("active")});b.classList.add("active");curShop=b.dataset.shop;rs();rc("out");rc("low")}});
 document.querySelectorAll(".status-btn").forEach(function(b){b.onclick=function(){document.querySelectorAll(".status-btn").forEach(function(x){x.classList.remove("active")});b.classList.add("active");curStatus=b.dataset.status;rc("out");rc("low")}});
